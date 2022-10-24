@@ -17,7 +17,7 @@ ksi2 = np.array([0.01314285714,0.012,0.01014285714,0.007428571429,0.005142857143
 
 
 def func(X,b,n):
-    return n*np.exp(X/b)
+    return ((np.sqrt(n**2 - np.sin(b)**2) - np.cos(b))/(n**2 -1)
 
 pars, cov = curve_fit(func,alpha1,ksi1,p0=[16,0.05], bounds=[-np.inf,np.inf])
 
@@ -31,9 +31,9 @@ print('Coeficientes')
                   # Second fit #
 #########################################################################################
 
-def punc(Y,m,a,f):
-    return m*Y**3 + a*Y**2 + f*Y
-
+def punc(Y, a, n):
+    return (n**2* - np.cos(a) - np.sqrt(n**2 - np.sin(a)**2))/(n**2 - np.cos(a) + np.srt(n**2 - np.sin(a)**2))
+    
 pars1, cov1 = curve_fit(punc,alpha2,ksi2,p0=[2,0.11,10], bounds=[-np.inf,np.inf])
 
 dados1 = np.linspace(10,max(alpha2),100)
