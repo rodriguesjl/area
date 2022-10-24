@@ -1,0 +1,57 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
+
+# Experimental Data, alhpa1, ksi1 = {angle  in radian and intensity measured}
+
+alpha1 = np.array([16,20.5,25.5,30,35.5,40.5,42.5,50,55,60,65,70,75,80.5])
+ksi1 = np.array([0.06142857143,0.07571428571,0.08285714286,0.09714285714,0.1114285714,0.1271428571,0.1642857143,0.1928571429,0.2214285714,0.2785714286,0.3357142857,0.4,0.5,0.6])
+
+alpha2 = np.array([18.5,25,30,35,40.5,44.5,50,55,59,64.5,68.5,75,80])
+ksi2 = np.array([0.01314285714,0.012,0.01014285714,0.007428571429,0.005142857143,0.003,0.0008571428571,0.0001428571429,0.002428571429,0.009714285714,0.02514285714,0.06285714286,0.1171428571])
+
+
+#########################################################################################
+                                  # First Fit #
+#########################################################################################
+
+
+def func(X,b,n):
+    return n*np.exp(X/b)
+
+pars, cov = curve_fit(func,alpha1,ksi1,p0=[16,0.05], bounds=[-np.inf,np.inf])
+
+dados = np.linspace(10,max(alpha1),100)
+yyy = func(dados,*pars)
+
+print('Coeficientes')
+
+
+#########################################################################################
+                  # Second fit #
+#########################################################################################
+
+def punc(Y,m,a,f):
+    return m*Y**3 + a*Y**2 + f*Y
+
+pars1, cov1 = curve_fit(punc,alpha2,ksi2,p0=[2,0.11,10], bounds=[-np.inf,np.inf])
+
+dados1 = np.linspace(10,max(alpha2),100)
+yyy1 = punc(dados1,*pars1)
+
+##########################################################################################
+                               # Scattering and plotting, data and theoretical fits#
+#########################################################################################
+
+figsize=(10,10)
+plt.scatter(alpha1,ksi1, label='Polarização Perpendicular')
+plt.scatter(alpha2,ksi2, label="Polarização Paralela")
+plt.plot(dados, yyy, color='black', label='Ajuste perpendicular', linestyle = '--', linewidth=2)
+plt.plot(dados1, yyy1, color='r', label='Ajuste paralelo', linestyle = '--', linewidth=2)
+plt.xlabel('Angulo α$^o$')
+plt.ylabel('Coeficiente de Reflexão - ζ')
+plt.title('Coeficiente de reflexão $x$ Ângulo - [ζ⋅α$^o$]')
+plt.legend()
+plt.grid()
+plt.savefig("Primeiro Ajuste HD.png",dpi=1000)
+plt.show()
